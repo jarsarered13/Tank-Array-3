@@ -1,0 +1,4 @@
+D:\Work\Personal\fedex_1\CensusService\CensusService\bin\CensusService.pdb
+D:\Work\Personal\fedex_1\CensusService\CensusService\obj\Debug\ResolveAssemblyReference.cache
+D:\Work\Personal\fedex_1\CensusService\CensusService\obj\Debug\CensusService.dll
+D:\Work\Personal\fedex_1\CensusService\CensusService\obj\Debug\CensusService.pdb
