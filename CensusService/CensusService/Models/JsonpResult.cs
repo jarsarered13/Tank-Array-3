@@ -37,7 +37,7 @@ namespace CensusService.Models
 				response.ContentEncoding = ContentEncoding;
 
 			if (Callback == null || Callback.Length == 0)
-				Callback = context.HttpContext.Request.QueryString["callback"];
+				Callback = context.HttpContext.Request.QueryString["jsoncallback"];
 
 			if (Data != null)
 			{

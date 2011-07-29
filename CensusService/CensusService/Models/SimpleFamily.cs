@@ -12,8 +12,8 @@ namespace CensusService.Models
 	{
 		public class Location
 		{
-			public long X {get;set;}
-			public long Y { get; set; }
+			public double X {get;set;}
+			public double Y { get; set; }
 		}
 
 		private List<SimplePerson> _children = null;
@@ -39,18 +39,25 @@ namespace CensusService.Models
 				_children = value;
 			} 
 		}
-		public string Address { get; set; }
+		public Location GeoLoc { get; set; }
 
 		public void FindPerson(QueryResultList results)
 		{
-			QueryResult r = results.Where(x => Id.Contains(x.Person.Id.DatabaseId.ToString()))
-				.FirstOrDefault();
+			//QueryResult r = results.Where(x => Id.Contains(x.Person.Id.DatabaseId.ToString()))
+			//	.FirstOrDefault();
 
-			if (r != null)
-			{				
-				Address = r.Person.GeneralEvents.Best.Place;
-			}
+			//if (r != null)
+			//{				
+				//Address = r.Person.GeneralEvents.Best.Place;
+			//}
 
+			// Y -122, 174
+			//X; 34, 42
+
+			double hit = CensusHelper.RandomHit();
+
+			GeoLoc = new Location { X = 34 + (hit * 5), Y = -122 + (hit * 50) };
+			
 			foreach (QueryResult result in results)
 			{
 				if (Father.FullName == result.Person.Name)

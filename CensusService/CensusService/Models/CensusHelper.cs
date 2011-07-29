@@ -15,6 +15,9 @@ namespace CensusService.Models
 	public class CensusHelper
 	{
 		private static IDictionary<int, int> _censusYearLookups = new Dictionary<int, int>();
+
+		private static Random random = new Random();
+		
 		//private static IDictionary<int, int> _databaseIdLookups = new Dictionary<int, int>();
 		
 		static CensusHelper()
@@ -89,5 +92,11 @@ namespace CensusService.Models
 			
 			return result.Key;
 		}
+
+		public static double RandomHit()
+		{
+			return random.NextDouble();
+		}
+
 	}
 }
