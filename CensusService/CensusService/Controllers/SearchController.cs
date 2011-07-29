@@ -46,14 +46,17 @@ namespace CensusService.Controllers
 			personRankConnectionPool = client.CreatePool(new ServerId[] { new ServerId("10.8.129.1:80") }, 60000, 60000);
 			queryProcessor = new QueryProcessor(personRankConnectionPool);
 
-			//string startingId = "6224";
+			// Get the census year from database id
 			int censusYear = CensusHelper.GetCensusYear(int.Parse(rid));
 			
+			// Get the previous/next census year
 			int databaseId = CensusHelper.GetDatabaseId(censusYear, dir);
 
+			// Get the previous database id
 			int searchCensusYear = CensusHelper.GetCensusYear(databaseId);
 
 			QueryResultList results;
+
 			try
 			{
 				results = queryProcessor.ExecuteQuery(string.Format("{0}:{1}", pid, rid));				
@@ -67,27 +70,27 @@ namespace CensusService.Controllers
 				};
 			}
 
-
 			List<SimpleFamily> familyResults = new List<SimpleFamily>();
 			List<Family> filteredResults = null;
 
 			filteredResults = results.PersonContainer.GetFamilies().Where(x => x.Id.Contains(databaseId.ToString())).Take(5).ToList();
+						
 			foreach (Family family in filteredResults)
-			{
+			{				
 				SimpleFamily simpleFamily = new SimpleFamily();
 
 				simpleFamily.Id = family.Id;
 				simpleFamily.CensusYear = searchCensusYear;
-				simpleFamily.Version = family.Version;
-				simpleFamily.SearchPersonId = pid;
-				simpleFamily.Mother = new SimplePerson(results.PersonContainer.GetPerson(family.MotherId), simpleFamily.CensusYear);
-				simpleFamily.Father = new SimplePerson(results.PersonContainer.GetPerson(family.FatherId), simpleFamily.CensusYear);
+				//simpleFamily.Version = family.Version;
+				
+				simpleFamily.Mother = SimplePerson.CreatePerson(results.PersonContainer.GetPerson(family.MotherId), simpleFamily.CensusYear);
+				simpleFamily.Father = SimplePerson.CreatePerson(results.PersonContainer.GetPerson(family.FatherId), simpleFamily.CensusYear);
 				
 				foreach (RelationshipPointer child in family.Children.ChildPointers)
 				{
-					simpleFamily.Children.Add(new SimplePerson(results.PersonContainer.GetPerson(child.Id), simpleFamily.CensusYear));
+					simpleFamily.Children.Add(SimplePerson.CreatePerson(results.PersonContainer.GetPerson(child.Id), simpleFamily.CensusYear));
 				}
-
+				simpleFamily.FindPerson(results);
 				familyResults.Add(simpleFamily);
 			}		
 
@@ -159,4 +162,6 @@ namespace CensusService.Controllers
 			};
 		}
 	}
+
+	
 }
