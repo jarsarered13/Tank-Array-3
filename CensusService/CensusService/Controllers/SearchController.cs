@@ -168,9 +168,10 @@ namespace CensusService.Controllers
 			{
 				SimpleFamily simpleFamily = new SimpleFamily();
 				simpleFamily.Id = "";
+				simpleFamily.CensusYear = searchCensusYear;
 				simpleFamily.IsSingleHouseHold = true;
 				simpleFamily.SinglePerson = SimplePerson.CreatePerson(single.Person, censusYear);
-
+				simpleFamily.SinglePerson.Selected = true;
 				simpleFamily.FindPerson(results);
 				familyResults.Add(simpleFamily);
 			}
