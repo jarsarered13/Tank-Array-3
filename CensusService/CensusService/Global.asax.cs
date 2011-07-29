@@ -34,11 +34,16 @@ namespace CensusService
 			);
 
 			routes.MapRoute(
+				"linkcensus", // Route name
+				"recordlink/{pid}/{rid}/{familyId}/{compareFamilyId}", // URL with parameters
+				new { controller = "Search", action = "RecordLink", familyId = "", compareFamilyLId = "" } // Parameter defaults
+			);
+
+			routes.MapRoute(
 				"Default", // Route name
 				"{controller}/{action}/{id}", // URL with parameters
 				new { controller = "Home", action = "Index", id = UrlParameter.Optional } // Parameter defaults
 			);
-
 		}
 
 		protected void Application_Start()

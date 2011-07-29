@@ -11,7 +11,7 @@ namespace CensusService.Models
 		private List<SimplePerson> _children = null;
 
 		public int Version { get; set; }
-		public long id { get; set; }
+		public string Id { get; set; }
 		public int CensusYear { get; set; }
 		public string SearchPersonId { get; set; }
 		public SimplePerson Mother {get;set;}

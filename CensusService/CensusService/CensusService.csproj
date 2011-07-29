@@ -55,6 +55,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\RecordLinkage.dll</HintPath>
     </Reference>
+    <Reference Include="RecordLinkingFramework">
+      <HintPath>..\..\..\..\TFS\Ancestry_Com\Library\Ancestry\RecordLinking\Prod\Release\RecordLinkingFramework.dll</HintPath>
+    </Reference>
     <Reference Include="ServiceFramework, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\ServiceFramework.dll</HintPath>
