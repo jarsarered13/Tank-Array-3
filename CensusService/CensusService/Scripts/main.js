@@ -31,9 +31,21 @@ function createSmallMarker(i, latitude, longitude) {
 	var marker = new google.maps.Marker({
 		position: myLatlng,
 		map: map,
+		animation: google.maps.Animation.DROP,
 		title: "Hello World!",
 		icon: image,
 		shadow: shadow
+	});
+
+	google.maps.event.addListener(marker, 'click', function () {
+		if (marker.getAnimation() != null) {
+			marker.setAnimation(null);
+		} else {
+			marker.setAnimation(google.maps.Animation.BOUNCE);
+			setTimeout(function () {
+				marker.setAnimation(null);
+			}, 1500);
+		}
 	});
 }
 
@@ -79,11 +91,19 @@ function createBigMarker(i, latitude, longitude) {
 $(document).ready(function () {
 	initialize();
 
+	createSmallMarker(0, 34, -82);
+	createSmallMarker(1, 37, -122);
+	createSmallMarker(2, 36, -110);
+	createSmallMarker(3, 35, -80);
+	createSmallMarker(4, 38, -90);
+
+	/*
 	createBigMarker(0, 34, -82);
 	createBigMarker(1, 37, -122);
 	createBigMarker(2, 36, -110);
 	createBigMarker(3, 35, -80);
 	createBigMarker(4, 38, -90);
+	*/
 	/*
 	$.getJSON('http://jlee/Census/113888907/6224?jsoncallback=?', function (data) {
 
