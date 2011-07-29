@@ -45,10 +45,7 @@ namespace CensusService.Models
 			this.Quality = quality;
 		}
 	}
-
-
-
-
+	
 	public class QueryProcessor
 	{
 		private ICommunicationPool connectionPool;
