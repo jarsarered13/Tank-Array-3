@@ -96,15 +96,17 @@ $(document).ready(function () {
 	createSmallMarker(2, 36, -110);
 	createSmallMarker(3, 35, -80);
 	createSmallMarker(4, 38, -90);
-	*/
+	
 	
 	createBigMarker(0, 34, -82);
 	createBigMarker(1, 37, -122);
 	createBigMarker(2, 36, -110);
 	createBigMarker(3, 35, -80);
 	createBigMarker(4, 38, -90);
+
+	*/
 	
-	/*
+	
 	$.getJSON('http://jlee/Census/113888907/6224?jsoncallback=?', function (data) {
 
 		$.each(data, function (i, item) {
@@ -112,7 +114,5 @@ $(document).ready(function () {
 			createBigMarker(i, item.GeoLoc.X, item.GeoLoc.Y);		
 		})
 	});
-	*/
-
 	
 });

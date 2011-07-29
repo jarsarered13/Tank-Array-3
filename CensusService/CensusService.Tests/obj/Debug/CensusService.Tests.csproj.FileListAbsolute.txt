@@ -10,3 +10,4 @@ D:\Work\Personal\fedex_1\CensusService\CensusService.Tests\obj\Debug\ResolveAsse
 D:\Work\Personal\fedex_1\CensusService\CensusService.Tests\obj\Debug\CensusService.Tests.dll
 D:\Work\Personal\fedex_1\CensusService\CensusService.Tests\obj\Debug\CensusService.Tests.pdb
 D:\Work\Personal\fedex_1\CensusService\CensusService.Tests\bin\Debug\CensusService.pdb
+D:\Work\Personal\fedex_1\CensusService\CensusService.Tests\bin\Debug\Augmentation.dll

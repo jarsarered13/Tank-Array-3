@@ -5,6 +5,7 @@ using System.Web;
 using PersonModel;
 using System.Drawing;
 using Shared;
+using Augmentation.Authorities.PlaceAuthority;
 
 namespace CensusService.Models
 {
@@ -40,34 +41,49 @@ namespace CensusService.Models
 			} 
 		}
 		public Location GeoLoc { get; set; }
+		public string Address { get; set; }
 
 		public void FindPerson(QueryResultList results)
 		{
-			//QueryResult r = results.Where(x => Id.Contains(x.Person.Id.DatabaseId.ToString()))
-			//	.FirstOrDefault();
+			QueryResult r = results.Where(x => Id.Contains(x.Person.Id.DatabaseId.ToString()))
+				.FirstOrDefault();
 
-			//if (r != null)
-			//{				
-				//Address = r.Person.GeneralEvents.Best.Place;
-			//}
+			if (r != null)
+			{			
+				// TODO Look up augmentation
+
+				if (r.Person.GeneralEvents.Best.NormalizedPlace != null)
+				{
+					PlaceNode node = PlaceAuthorityMemoryIndex.
+						Instance.FindPlaceByPlaceId(r.Person.GeneralEvents.Best.NormalizedPlace.City.Id);
+
+					//GeoLoc = new Location
+					//	{
+					//		X = node.Places[0].Latitude * 100,
+					//		Y = node.Places[0].Longitude * 100
+					//	};
+
+					Address = node.Places.First().GetFullHierarchy();
+				}				
+			}
 
 			// Y -122, 174
 			//X; 34, 42
 
-			double hit = CensusHelper.RandomHit();
+			//double hit = CensusHelper.RandomHit();
 
-			GeoLoc = new Location { X = 34 + (hit * 5), Y = -122 + (hit * 50) };
+			//GeoLoc = new Location { X = 34 + (hit * 5), Y = -122 + (hit * 50) };
 			
 			foreach (QueryResult result in results)
 			{
-				if (Father.FullName == result.Person.Name)
+				if (Father != null && Father.FullName == result.Person.Name)
 				{
 					SelectedPersonId = result.Person.Id.Pid.ToString();
 					Father.Selected = true;
 					return;
 				}
 
-				if (Mother.FullName == result.Person.Name)
+				if (Mother != null && Mother.FullName == result.Person.Name)
 				{
 					SelectedPersonId = result.Person.Id.Pid.ToString();
 					Mother.Selected = true;

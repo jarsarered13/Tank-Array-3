@@ -52,6 +52,15 @@ namespace CensusService.Controllers
 			// Get the previous/next census year
 			int databaseId = CensusHelper.GetDatabaseId(censusYear, dir);
 
+			if (databaseId == 0)
+			{
+				return new JsonResult
+				{
+					Data = string.Empty,
+					JsonRequestBehavior = JsonRequestBehavior.AllowGet
+				};
+			}
+
 			// Get the previous database id
 			int searchCensusYear = CensusHelper.GetCensusYear(databaseId);
 
