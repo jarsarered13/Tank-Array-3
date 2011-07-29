@@ -51,16 +51,28 @@ function createBigMarker(i, latitude, longitude) {
 	var shadow = new google.maps.MarkerImage('http://www.ancestryux.net/dm/censusexplorer/images/marker-lg-shadow.png',
 	// The shadow image is larger in the horizontal dimension
 	// while the position and offset are the same as for the main image.
-			new google.maps.Size(35, 20),
+			new google.maps.Size(55, 32),
 			new google.maps.Point(0, 0),
-			new google.maps.Point(-10, 20));
+			new google.maps.Point(-10, 0));
 
 	var marker = new google.maps.Marker({
 		position: myLatlng,
 		map: map,
+		animation: google.maps.Animation.DROP,
 		title: "Hello World!",
 		icon: image,
 		shadow: shadow
+	});
+
+	google.maps.event.addListener(marker, 'click', function () {
+		if (marker.getAnimation() != null) {
+			marker.setAnimation(null);
+		} else {
+			marker.setAnimation(google.maps.Animation.BOUNCE);
+			setTimeout(function() {				
+				marker.setAnimation(null);
+				}, 1500);
+		}
 	});
 }
 
