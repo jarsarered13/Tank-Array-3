@@ -42,6 +42,9 @@ namespace CensusService.Models
 		}
 		public Location GeoLoc { get; set; }
 		public string Address { get; set; }
+		public bool IsSingleHouseHold { get; set; }
+
+		public SimplePerson SinglePerson { get; set; }
 
 		public void FindPerson(QueryResultList results)
 		{

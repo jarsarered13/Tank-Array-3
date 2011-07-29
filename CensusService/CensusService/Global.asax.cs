@@ -28,6 +28,12 @@ namespace CensusService
 			);
 
 			routes.MapRoute(
+				"geo", // Route name
+				"geo/{address}", // URL with parameters
+				new { controller = "Search", action = "GeoCode", address = "" } // Parameter defaults
+			);
+
+			routes.MapRoute(
 				"Census", // Route name
 				"{pid}/{rid}/{dir}", // URL with parameters
 				new { controller = "Search", action = "FamilySearch", pid = "113888907", rid = "6224", dir="prev" } // Parameter defaults
@@ -38,6 +44,8 @@ namespace CensusService
 				"recordlink/{pid}/{rid}/{familyId}/{compareFamilyId}", // URL with parameters
 				new { controller = "Search", action = "RecordLink", familyId = "", compareFamilyLId = "" } // Parameter defaults
 			);
+
+			
 
 			routes.MapRoute(
 				"Default", // Route name

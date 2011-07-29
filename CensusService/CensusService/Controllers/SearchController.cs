@@ -11,10 +11,11 @@ using RecordLinkingFramework;
 using Shared;
 using RecordLinkage;
 using System.IO;
+using System.Net;
 
 namespace CensusService.Controllers
 {
-	[JsonpFilter]
+	
 	public class SearchController : Controller
 	{
 		private static string DefaultComparisonEngineConfigurationFileLocation = @"bin\DefaultComparisonEngine.xml";
@@ -39,6 +40,7 @@ namespace CensusService.Controllers
 		/// <param name="pid"></param>
 		/// <param name="rid"></param>
 		/// <returns></returns>
+		[JsonpFilter]
 		public ActionResult FamilySearch(string pid, string rid, string dir)
 		{
 			NetworkClient client = new NetworkClient(new DataProperties());
@@ -82,6 +84,62 @@ namespace CensusService.Controllers
 			List<SimpleFamily> familyResults = new List<SimpleFamily>();
 			List<Family> filteredResults = null;
 
+			//#region new approach
+			//foreach (QueryResult result in results)
+			//{
+			//    if (result.Person.Id.DatabaseId == databaseId)
+			//    {
+			//        var familyList = results.PersonContainer.GetFamilies(result.Person.Id);
+
+			//        if (familyList.Count > 1)
+			//        {
+			//            foreach (Family family in familyList)
+			//            {
+
+			//                SimpleFamily simpleFamily = new SimpleFamily();
+
+			//                simpleFamily.Id = family.Id;
+			//                simpleFamily.CensusYear = searchCensusYear;
+
+			//                simpleFamily.Mother = SimplePerson.CreatePerson(results.PersonContainer.GetPerson(family.MotherId), simpleFamily.CensusYear);
+			//                simpleFamily.Father = SimplePerson.CreatePerson(results.PersonContainer.GetPerson(family.FatherId), simpleFamily.CensusYear);
+
+			//                foreach (RelationshipPointer child in family.Children.ChildPointers)
+			//                {
+			//                    simpleFamily.Children.Add(SimplePerson.CreatePerson(results.PersonContainer.GetPerson(child.Id), simpleFamily.CensusYear));
+			//                }
+			//                simpleFamily.FindPerson(results);
+
+			//                familyResults.Add(simpleFamily);
+			//            }
+			//        }
+			//        else
+			//        {
+			//            SimpleFamily simpleFamily = new SimpleFamily();
+			//            if (result.Person.Gender == GenderType.Female)
+			//            {
+			//                simpleFamily.Mother = SimplePerson.CreatePerson(result.Person, censusYear);
+			//            }
+			//            else
+			//            {
+			//                simpleFamily.Father = SimplePerson.CreatePerson(result.Person, censusYear);
+			//            }
+
+			//            familyResults.Add(simpleFamily);
+			//        }
+			//    }
+			//}
+
+			//return new JsonResult
+			//{
+			//    Data = familyResults,
+			//    JsonRequestBehavior = JsonRequestBehavior.AllowGet
+			//};	
+			//#endregion
+			
+
+			//////////////////////////////////////////////////////
+
 			filteredResults = results.PersonContainer.GetFamilies().Where(x => x.Id.Contains(databaseId.ToString())).Take(5).ToList();
 						
 			foreach (Family family in filteredResults)
@@ -101,14 +159,60 @@ namespace CensusService.Controllers
 				}
 				simpleFamily.FindPerson(results);
 				familyResults.Add(simpleFamily);
-			}		
+			}
+
+		    List<QueryResult> singlePeople = results.Where(x => results.PersonContainer.GetFamilies(x.Person.Id).Count == 0 &&
+				x.Person.Id.DatabaseId == databaseId).ToList();
+
+			foreach (QueryResult single in singlePeople)
+			{
+				SimpleFamily simpleFamily = new SimpleFamily();
+				simpleFamily.Id = "";
+				simpleFamily.IsSingleHouseHold = true;
+				simpleFamily.SinglePerson = SimplePerson.CreatePerson(single.Person, censusYear);
+
+				simpleFamily.FindPerson(results);
+				familyResults.Add(simpleFamily);
+			}
 
 			return new JsonResult
 			{
 				Data = familyResults,
 				JsonRequestBehavior = JsonRequestBehavior.AllowGet
 			};	
-		}		
+		}
+
+		public ActionResult GeoCode(string address)
+		{
+			address = string.Format(@"http://maps.googleapis.com/maps/api/geocode/json?address={0}&sensor=false", address);
+
+			HttpWebRequest request = WebRequest.Create(address) as HttpWebRequest;
+			
+			// Get response  
+			string s;
+			using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+			{
+				// Get the response stream  
+				StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
+
+				// Console application output  
+				s = reader.ReadToEnd();
+			}
+
+			if (Request["jsoncallback"] != null)
+			{
+				return Content(Request["jsoncallback"].ToString() + "(" + s + ")", "application/json");
+			}
+
+			return Content(s, "application/json");
+
+			//return new JsonResult
+			//{
+			//	Data = s,
+			//	JsonRequestBehavior = JsonRequestBehavior.AllowGet
+			//};	
+
+		}
 		
 		/// <summary>
 		/// 
@@ -118,6 +222,7 @@ namespace CensusService.Controllers
 		/// <param name="familyId"></param>
 		/// <param name="compareFamilyId"></param>
 		/// <returns></returns>
+		[JsonpFilter]
 		public ActionResult RecordLink(string pid, string rid, string familyId, string compareFamilyId)
 		{
 			DefaultComparisonEngineConfigurationFileLocation = Path.Combine(Request.PhysicalApplicationPath, DefaultComparisonEngineConfigurationFileLocation);

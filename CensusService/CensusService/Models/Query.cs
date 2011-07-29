@@ -61,7 +61,7 @@ namespace CensusService.Models
 			CommunicationMessage request = new CommunicationMessage(MessageType.Request);
 			request.Command = "Query";
 			request.Add("personId", personId);
-			request.Add("maxResults", "20");
+			request.Add("maxResults", "10");
 			request.Add("minComparisonScore", "1");
 			request.Add("depth", "1");
 			request.Add("collectionNames", "Census");
